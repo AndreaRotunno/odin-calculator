@@ -2,6 +2,7 @@ const display = document.querySelector("#display");
 let resetDisplay = false;
 display.textContent = "0";
 const digits = document.querySelectorAll(".digit");
+
 digits.forEach((e) =>
   e.addEventListener("click", (e) => {
     if (e.target.textContent != "." || !display.textContent.includes(".")) {
@@ -18,15 +19,49 @@ digits.forEach((e) =>
   })
 );
 
-document
-  .querySelector("#clear")
-  .addEventListener("click", () => (display.textContent = "0"));
+document.querySelector("#clear").addEventListener("click", () => {
+  display.textContent = "0";
+  firstNum = null;
+  operation = "";
+});
 
+let firstNum;
+let operation = "";
 document.querySelectorAll(".operator").forEach((e) =>
-  e.addEventListener("click", () => {
+  e.addEventListener("click", (e) => {
+    operation = e.target.id;
+    if (firstNum != null && !resetDisplay) {
+      display.textContent = doOperation(
+        firstNum,
+        Number(display.textContent),
+        operation
+      );
+    }
+    firstNum = Number(display.textContent);
     resetDisplay = true;
   })
 );
+
+document.querySelector("#sign").addEventListener("click", () => {
+  display.textContent = String(Number(display.textContent) * -1);
+});
+
+document.querySelector("#equals").addEventListener("click", () => {
+  if (operation) {
+    display.textContent = doOperation(
+      firstNum,
+      Number(display.textContent),
+      operation
+    );
+    resetDisplay = true;
+    firstNum = null;
+    operation = null;
+  }
+});
+
+document.querySelector("#percent").addEventListener("click", () => {
+  display.textContent = String(Number(display.textContent) * 0.01);
+});
 
 function add(a, b) {
   return a + b;
@@ -46,4 +81,8 @@ function subtract(a, b) {
 
 function multiply(a, b) {
   return a * b;
+}
+
+function doOperation(a, b, op) {
+  return window[op](a, b);
 }
