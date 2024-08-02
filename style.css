@@ -27,7 +27,7 @@ button{
 .digit{
     background-color: #52AA5E;
 }
-.operator{
+.operator,#equals{
 background-color: #3AAED8;
 }
 .util{
